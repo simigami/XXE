@@ -1,0 +1,160 @@
+xxe.html
+
+<!DOCTYPE html>
+<html>
+<body>
+<meta charset='utf-8'/>
+<form method="POST" action="./xxe.php">
+<p>
+<label>TEXT PAGE</label>
+</p>
+<p>
+<textarea class="form-control input-block" name="abcd" rows="12" cols="100">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xml>
+Input XML Code Here!!
+</xml>
+</textarea>
+</p>
+<input class="btn btn-primary" type="submit">
+</form>
+<p><button onclick='location.href="get_key.php"'>Get Key</button></p>
+<p>
+<form enctype='multipart/form-data' action='upload_auth.html' method='post'>
+        <button>Upload</button>
+</form>
+</p>
+</html>
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+xxe.php
+
+<?php
+libxml_disable_entity_loader(false);
+libxml_use_internal_errors(true);
+$xml=$_POST['abcd'];
+$doc = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);
+if($doc ==false){
+        echo "\nFailed loading XML: ";
+        foreach(libxml_get_errors() as $error){
+                echo "<br>", $error->message;
+        }
+}
+else{
+        print_r($doc);
+}
+?>
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+get_key.php
+
+<?php
+if ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' or $_SERVER['REMOTE_ADDR'] == '::1' )
+{
+        echo "This is a upload key value : ";
+        system("cat ????????????????????????.txt");
+}
+else
+{
+        echo "<script>alert('You are not admin!!!');</script>";
+        echo "<script>window.location.href='./xxe.html';</script>";
+        exit;
+}
+?>
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+upload_auth.html
+
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<h1>INPUT YOUR KEY TO UPLOAD!!</h1>
+<form action='upload.php' method='post'>
+        <input type='text' size='40' name='key'>
+        <input type='submit' value='submit'>
+</form>
+</body>
+</html>
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+upload.php
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+</head>
+<body>
+<?php
+        $key=$_POST['key'];
+        $k=shell_exec("cat ./????????????????????????.txt");
+        $k=rtrim($k);
+        if ($key!=$k){
+                echo "<script>alert('WRONG KEY!!');history.back();</script>";
+                //header("Location: xxe.html");
+        }
+?>
+<form method="POST" action="./xxe.php">
+<p>
+<label>UPLOAD PAGE</label>
+</p>
+</form>
+<p>
+<form enctype='multipart/form-data' action='upload_ok.php' method='post'>
+        <input type='file' name='myfile'>
+        <input type="hidden" value=<?php echo $key;?> name="key" />
+        <button>Upload</button>
+</form>
+</p>
+</body>
+</html>
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+Admin_key_file.txt
+
+19f5e5e8c5c73b888b80b0c07274a68c
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+upload_ok.php
+
+<?php
+// 설정
+//if ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' or $_SERVER['REMOTE_ADDR'] == '::1' ){
+$key=$_POST['key'];
+$k=shell_exec("cat ./????????????????????????.txt");
+$k=rtrim($k);
+if ( $key != $k )
+{
+        echo "<script>alert('WRONG KEY!! $key');history.back();</script>";
+}
+$uploads_dir = './uploads';
+$allowed_ext = array('htaccess','txt');
+$error = $_FILES['myfile']['error'];
+$name = $_FILES['myfile']['name'];
+$ext = array_pop(explode('.', $name));
+if( $error != UPLOAD_ERR_OK ) {
+        switch( $error ) {
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                        echo "FILE SIZE IS TOO BIG!! ($error)";
+                        break;
+                case UPLOAD_ERR_NO_FILE:
+                        echo "FILE IS NOT ATTACHED!! ($error)";
+                        break;
+                default:
+                        echo "FILE UPLOAD FAILED!! ($error)";
+        }
+        exit;
+}
+if( !in_array($ext, $allowed_ext)) {
+        echo "NOT ALLOWED FILE EXTENSION";
+        exit;
+}
+move_uploaded_file( $_FILES['myfile']['tmp_name'], "$uploads_dir/$name");
+echo "<h2>UPLOAD SUCCESS!!</h2>";
+?>
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+
+

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<meta charset='utf-8'/>
+<form method="POST" action="./xxe.php">
+<p>
+<label>TEXT PAGE</label>
+</p>
+<p>
+<textarea class="form-control input-block" name="abcd" rows="12" cols="100">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xml>
+Input XML Code Here!!
+</xml>
+</textarea>
+</p>
+<input class="btn btn-primary" type="submit">
+</form>
+<p><button onclick='location.href="get_key.php"'>Get Key</button></p>
+<p>
+<form enctype='multipart/form-data' action='upload_auth.html' method='post'>
+        <button>Upload</button>
+</form>
+</p>
+</html>
